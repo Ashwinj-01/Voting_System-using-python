@@ -2,11 +2,10 @@ import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 
-# Database connection and setup
 conn = sqlite3.connect('voting_system.db')
 c = conn.cursor()
 
-# Create tables if they do not exist
+
 c.execute('''
     CREATE TABLE IF NOT EXISTS voters (
         card_no INTEGER PRIMARY KEY,
@@ -45,7 +44,6 @@ c.execute('''
 
 conn.commit()
 
-# Admin Functions
 def admin_login(username, password):
     c.execute("SELECT password FROM admins WHERE username = ?", (username,))
     result = c.fetchone()
@@ -89,7 +87,6 @@ def generate_report():
     return results
 
 def generate_place_report():
-    """Generates a report showing the count of votes cast from each place."""
     c.execute("SELECT place, COUNT(*) FROM votes GROUP BY place")
     results = c.fetchall()
     if results:
@@ -121,7 +118,6 @@ def cast_vote(card_no, candidate, place):
     return True
 
 def clear_database():
-    """Clears all data from the database."""
     try:
         c.execute("DELETE FROM votes")
         c.execute("DELETE FROM candidates")
@@ -175,7 +171,6 @@ def admin_menu():
         report_message = "\n".join(f"{candidate}: {votes} votes" for candidate, votes in report)
         messagebox.showinfo("Election Report", report_message)
 
-    # Admin GUI Elements
     card_no_entry = tk.Entry(admin_window)
     name_entry = tk.Entry(admin_window)
     password_entry = tk.Entry(admin_window, show='*')
